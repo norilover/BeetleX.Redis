@@ -127,12 +127,18 @@ namespace BeetleX.Redis
             return System.Convert.ToInt64(result.Value);
         }
 
-        public async ValueTask<long> ZRevRank(string member)
+        public async ValueTask<long?> ZRevRank(string member)
         {
             ZREVRANK cmd = new ZREVRANK(Key, member);
             var result = await DB.Execute(cmd, typeof(string));
             if (result.IsError)
                 throw new RedisException(result.Messge);
+            
+            if (result.Value == null)
+            {
+                return null;
+            }
+            
             return System.Convert.ToInt64(result.Value);
         }
 
